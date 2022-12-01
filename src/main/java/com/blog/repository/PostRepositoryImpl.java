@@ -1,0 +1,26 @@
+package com.blog.repository;
+
+import com.blog.domain.Post;
+import com.blog.request.PostSearch;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
+import static com.blog.domain.QPost.post;
+
+@RequiredArgsConstructor
+public class PostRepositoryImpl implements PostRepositoryCustom{
+
+    private final JPAQueryFactory jpaQueryFactory;
+
+
+    @Override
+    public List<Post> getList(PostSearch postSearch) {
+        return jpaQueryFactory.selectFrom(post)
+                .limit(postSearch.getPage())
+                .offset((long) (postSearch.getPage() - 1) * postSearch.getSize())
+                .orderBy(post.id.desc())
+                .fetch();
+    }
+}

@@ -3,15 +3,20 @@ package com.blog.service;
 import com.blog.domain.Post;
 import com.blog.repository.PostRepository;
 import com.blog.request.PostCreate;
+import com.blog.request.PostSearch;
 import com.blog.response.PostResponse;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class PostServiceTest {
@@ -62,8 +67,33 @@ class PostServiceTest {
 
         //then
         assertNotNull(response);
+        assertEquals(1L, postRepository.count());
         assertEquals("foo", response.getTitle());
         assertEquals("bar", response.getContent());
     }
 
+    @Test
+    @DisplayName("글 1페이지 조회")
+    void test3() {
+        // given
+        List<Post> requestPosts = IntStream.range(0, 20)
+                .mapToObj(i -> Post.builder()
+                        .title("foo" + i)
+                        .content("bar1" + i)
+                        .build())
+                .collect(Collectors.toList());
+
+        postRepository.saveAll(requestPosts);
+
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .build();
+
+        // when
+        List<PostResponse> posts = postService.getList(postSearch);
+
+        // then
+        assertEquals(10L, posts.size());
+        assertEquals("foo19", posts.get(0).getTitle());
+    }
 }
