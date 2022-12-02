@@ -1,6 +1,7 @@
 package com.blog.controller;
 
 import com.blog.request.PostCreate;
+import com.blog.request.PostEdit;
 import com.blog.request.PostSearch;
 import com.blog.response.PostResponse;
 import com.blog.service.PostService;
@@ -33,7 +34,10 @@ public class PostController {
         return postService.getList(postSearch);
     }
 
-
+    @PatchMapping("/posts/{postId}")
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
+        postService.edit(postId, request);
+    }
 }
 
 // 데이터를 검증하는 이유
