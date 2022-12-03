@@ -38,6 +38,11 @@ public class PostController {
     public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
         postService.edit(postId, request);
     }
+
+    @DeleteMapping("posts/{postId}")
+    public void delete(@PathVariable Long postId) {
+        postService.delete(postId);
+    }
 }
 
 // 데이터를 검증하는 이유
