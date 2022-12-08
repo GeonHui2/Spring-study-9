@@ -1,5 +1,6 @@
 package com.blog.controller;
 
+import com.blog.config.data.UserSession;
 import com.blog.request.PostCreate;
 import com.blog.request.PostEdit;
 import com.blog.request.PostSearch;
@@ -18,6 +19,17 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping("/foo")
+    public Long foo(UserSession userSession) {
+        log.info(">>>{}", userSession.id);
+        return userSession.id;
+    }
+
+    @GetMapping("/bar")
+    public String bar(UserSession userSession) {
+        return "인증이 필요한 페이지";
+    }
 
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request) {
