@@ -1,5 +1,7 @@
 package com.blog.controller;
 
+import com.blog.domain.Users;
+import com.blog.exception.InvalidSignInformation;
 import com.blog.repository.UsersRepository;
 import com.blog.request.Login;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +18,14 @@ public class AuthController {
     private final UsersRepository usersRepository;
 
     @PostMapping("/auth/login")
-    public void login(@RequestBody Login login) {
+    public Users login(@RequestBody Login login) {
         // json
         log.info(">>>login={}", login);
 
         // DB에서 조회
+        Users user = usersRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
+                .orElseThrow(InvalidSignInformation::new);
+
+        return user;
     }
 }
