@@ -117,7 +117,7 @@ class AuthControllerTest {
 
         Login login = Login.builder()
                 .email("hodolman88@gamil.com")
-                .password("1234")
+                .password("12345")
                 .build();
 
         String json = objectMapper.writeValueAsString(login);
